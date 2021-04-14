@@ -3,5 +3,3 @@ Pour ce qui nous concerne, nous allons utiliser l'interface [Azure CLI](https://
 
 Nous passons de l'hôte batch (cmd) à powerhsell plus souple pour manipuler les variables
 script [powershell](https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step4/src/template/deploiement.ps1)
-
-script [bash](https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step4/src/template/deploiement.sh)

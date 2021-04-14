@@ -1,5 +1,4 @@
-# Script pour etape Etape 4 
-# https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step4/README.md
+# Script pour etape Etape 4 - Eric Vernié
 # 
 # Ce script crée
 # - un groupe de ressource
@@ -18,15 +17,31 @@
 # - Les services AppInsight
 
 
-$sub="f3156437-ba5d-43ca-bc78-58c9d29dc92b" #NICLERC
-
+$sub=az account show --query "id" -o tsv
+az account set -s $sub
 az extension add --name application-insights
 
-$suffixe=Read-host "Entrez le suffixe à utiliser" 
+$suffixe=Read-host "Entrez le suffixe à utiliser (que des minuscule et chiffres :) " 
+
+####################################################################################
+# Compilation des applications
+Remove-Item WebAppUi.zip  
+dotnet publish ..\WebAppUI\CnAppForAzureDev.csproj
+Compress-Archive -Path ..\WebAppUI\bin\Debug\netcoreapp3.1\publish\* -DestinationPath WebAppUi.zip  
+
+Remove-Item CnaCatalogService.zip  
+dotnet publish ..\CnaCatalogService\CnaCatalogService.csproj
+Compress-Archive -Path ..\CnaCatalogService\bin\Debug\netcoreapp3.1\publish\* -DestinationPath CnaCatalogService.zip  
+
+
+Remove-Item CnaFuncOnCatalog.zip  
+dotnet publish ..\CnaFuncOnCatalog\CnaFuncOnCatalog.csproj
+Compress-Archive -Path ..\CnaFuncOnCatalog\bin\Debug\netcoreapp3.1\publish\* -DestinationPath CnaFuncOnCatalog.zip  
+
 ################################################################
 # déclaration des variables
 
-$rgname="cna"+ $suffixe +"-rg"
+$rgname="CNA-"+ $suffixe +"-rg"
 $planname="cna$suffixe-plan"
 $webappname="cnawebui$suffixe"
 $catalogservicename="cnawebapi"+$suffixe
@@ -35,7 +50,7 @@ $functionstorage="cnafuncstr"+$suffixe
 $accountname="cnacatalogstr"+$suffixe
 $tablename="catalog" 
 $containername="images" 
-$apimname="cnaapim"+ $suffixe
+#$apimname="cnaapim"+ $suffixe
 $servicebusnamespace="cnasb"+$suffixe
 $queuename="cnacatalogqueue"
 $topicname="cnacatalogtopic"
@@ -43,10 +58,7 @@ $subscriptionname="cnacatalogsubin"
 $cosmosdbname="cnacosmosdb"+$suffixe
 $location="francecentral"
 $catalogitemBaseaddressurl="https://" +$catalogservicename + ".azurewebsites.net/api/catalog/items"
-################################################################
 
-#az login
-az account set --subscription $sub
 ############################## GROUPE DE RESSOURCE #################################
 write-host  Création du groupe de ressources : $rgname 
 az group create -n $rgname -l $location
@@ -114,16 +126,13 @@ $servicebusconnectionstring=$servicebusconnectionstring.Substring(1).Substring(0
 
 ########################## SERVICE PLAN ET APP SERVICE ###########################
 write-host  Création du service plan : $planname
-  az appservice plan create -g $rgname -n $planname -l $location
-  
+az appservice plan create -g $rgname -n $planname -l $location
 
 write-host  Création de la webapp $webappname  
-  az webapp create -g $rgname -p $planname -n $webappname -r "`"DOTNETCORE|3.1`""
- 
-  # 
+az webapp create -g $rgname -p $planname -n $webappname -r "`"DOTNETCORE|3.1`""
 
 write-host  Création du service $catalogservicename
- az webapp create -g $rgname -p $planname -n $catalogservicename -r "`"DOTNETCORE|3.1`""
+az webapp create -g $rgname -p $planname -n $catalogservicename -r "`"DOTNETCORE|3.1`""
 
 ####################################################################################
 
@@ -174,10 +183,6 @@ az functionapp create -n $functionname -g $rgname --app-insights $functionname -
 az functionapp config appsettings set -n $functionname -g $rgname --settings ApplicationInsightsAgent_EXTENSION_VERSION="~2" APPLICATIONINSIGHTS_CONNECTION_STRING=$functionappinsightsconnectionstring QueueName=$queuename ServiceBusConnectionString=$servicebusconnectionstring
 ##################################################################################
 
-###################### API MANAGEMENT  ###################################
-#write-host Création de la passerelle $apimname
-#az apim create --name $apimname -g $rgname  -l $location  --sku-name Developer --publisher-email ericv@microsoft.com --publisher-name Microsoft --no-wait
-##################################################################################
 
 ################################ DEPLOIEMENT DES APPS ##################################
 #déploiement des applications
@@ -194,5 +199,6 @@ az functionapp stop -g $rgname -n $functionname
 az functionapp start -g $rgname -n $functionname 
 ##################################################################################
 
-#Read-host "Une fois l application testée, appuyez sur [ENTREE] pour supprimer le groupe de ressources"
-#  az group delete -g  $rgname
+Remove-Item .\CnaCatalogService.zip
+Remove-Item .\CnaFuncOnCatalog.zip
+Remove-Item .\WebAppUi.zip

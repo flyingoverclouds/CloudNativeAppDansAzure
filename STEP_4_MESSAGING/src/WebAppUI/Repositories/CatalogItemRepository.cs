@@ -124,18 +124,11 @@ namespace CnAppForAzureDev.Repositories
        
         public async Task<List<CatalogItem>> ListAsync()
         {            
-                
-               
             // Invoque le microservice catalogue via Http
             // Remarque cette méthode est invoquée régulierement il est possible
             // TODO : Ajouter un cache local afin d'éviter de soliciter le service catalogue
             // inutilement
-           
-
              _catalogItems = await _httpCatalogClient.ListAsync();
-           
-
-
 
             return _catalogItems;
         }
