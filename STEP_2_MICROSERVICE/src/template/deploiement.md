@@ -3,4 +3,3 @@ Pour ce qui nous concerne, nous allons utiliser l'interface [Azure CLI](https://
 
 script [cmd](https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step2/src/template/deploiement.ps1)
 
-script [bash](https://github.com/EricVernie/CloudNativeAppForAzureDev/blob/step2/src/template/deploiement.sh)

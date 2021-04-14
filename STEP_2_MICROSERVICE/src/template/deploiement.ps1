@@ -54,13 +54,13 @@ write-host $cosmosdbconnectionstring
 Write-host Création de la table $tablename
 az cosmosdb table create -a $cosmosdbname -g $rgname -n $tableName --throughput 400
 ####################################################################################
-
 ################################ COMPTE DE STOCKAGE POUR IMAGES ################################
 write-host  Création du compte de stockage : $accountname
 $checknamestorage=az storage account check-name -n $accountname --query nameAvailable
 if ($checknamestorage -eq $false)
 {
-    $accountname=$helper.GetName($accountname)
+    Write-Error 'Nom du storage account invalide : $accountname'
+    break
 }
 
 az storage account create -n $accountname -g $rgname  --sku  Standard_LRS  -l $location
@@ -87,28 +87,22 @@ az storage entity insert --account-key $accountkey  --account-name $accountname 
 write-host  Création du service plan : $planname
 az appservice plan create -g $rgname -n $planname -l $location
 
-
 az webapp create -g $rgname -p $planname -n $webappname 
 az webapp config appsettings set -g $rgname -n $webappname --settings  CatalogItemsServiceUrl=$catalogserviceurl  MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
-
-#az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
-
+az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
 
-
-
 write-host  Création API $catalogservicename
-
-
 az webapp create -g $rgname -p $planname -n $catalogservicename 
 az webapp config appsettings set -g $rgname -n $catalogservicename --settings UseCosmosDb=false AccountKey=$accountkey AccountName=$accountname CosmosDbConnectionString=$cosmosdbconnectionstring CatalogName=$tablename ContainerName=$containername  MaxItems=25 MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
-
-#az webapp deployment source config-zip -g $rgname -n $catalogservicename --src .\CnaCatalogService.zip
-
+az webapp deployment source config-zip -g $rgname -n $catalogservicename --src .\CnaCatalogService.zip
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
 
 
 
 ##################################################################################
+#Cleaning temporary deployment artefact
+Remove-Item WebAppUI.zip
+Remove-Item CnaCatalogService.zip
