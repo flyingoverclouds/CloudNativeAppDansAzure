@@ -1,10 +1,9 @@
-
 #retrieve the default subscription ID. You can change it and force a specifi subscription ID.
 $sub=az account show --query "id"
 
-#$suffixe=Read-host "Entrez le suffixe à utiliser" 
-$suffixe="step2nc"
-$rgname="cna"+ $suffixe +"-rg"
+$suffixe=Read-host "Entrez le suffixe à utiliser" 
+
+$rgname="CNA-"+ $suffixe +"-rg"
 $accountname="cna"+$suffixe+"storage"
 $planname="cnaplan"+$suffixe
 $webappname="cnawebui"+$suffixe
@@ -17,6 +16,13 @@ $cosmosdbname="cnacosmosdb"+$suffixe
 
 #az login
 az account set --subscription $sub
+
+####################################################################################
+# Compilation des applications
+Remove-Item WebAppUI.zip  
+dotnet publish ..\WebAppUI\CnAppForAzureDev.csproj
+Compress-Archive -Path ..\WebAppUI\bin\Debug\netcoreapp3.1\publish\* -DestinationPath WebAppUI.zip  
+
 
 ############################## GROUPE DE RESSOURCE #################################
 write-host  Création du groupe de ressource : $rgname 
@@ -37,14 +43,20 @@ write-host $cosmosdbconnectionstring
 
 Write-host Création de la table $tablename
 az cosmosdb table create -a $cosmosdbname -g $rgname -n $tableName --throughput 400
-####################################################################################
+
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=1 "_Id=1" OwnerId=1 ProductId=1 ProductName=Tomates  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/tomates.jpg  ProductAllergyInfo=None
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=2 "_Id=2" OwnerId=1 ProductId=2 ProductName=Pain  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/pain.jpg  ProductAllergyInfo=None 
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=3 "_Id=3" OwnerId=1 ProductId=3 ProductName=Aubergines  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/Aubergine.png  ProductAllergyInfo=None 
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=4 "_Id=4" OwnerId=1 ProductId=4 ProductName=Coca  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/Coca.png  ProductAllergyInfo=None 
+
 
 ################################ COMPTE DE STOCKAGE POUR IMAGES ################################
 write-host  Création du compte de stockage : $accountname
 $checknamestorage=az storage account check-name -n $accountname --query nameAvailable
 if ($checknamestorage -eq $false)
 {
-    $accountname=$helper.GetName($accountname)
+  Write-Error "Invalid storage account name"
+  break
 }
 
 az storage account create -n $accountname -g $rgname  --sku  Standard_LRS  -l $location
@@ -78,5 +90,9 @@ az webapp start -g $rgname -n $webappname
 
 
 az webapp config appsettings set -g $rgname -n $webappname --settings UseCosmosDb=false AccountKey=$accountkey AccountName=$accountname CosmosDbConnectionString=$cosmosdbconnectionstring CatalogName=$tablename ContainerName=$containername  MaxItems=25 MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
-
 ##################################################################################
+Remove-Item WebAppUI.zip  
+
+# Memento
+Write-Host "*** WebApps :"
+az webapp list -g $rgname -o table

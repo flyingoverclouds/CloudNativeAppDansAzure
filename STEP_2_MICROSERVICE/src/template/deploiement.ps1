@@ -53,6 +53,13 @@ write-host $cosmosdbconnectionstring
 
 Write-host Création de la table $tablename
 az cosmosdb table create -a $cosmosdbname -g $rgname -n $tableName --throughput 400
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=1 "_Id=1" OwnerId=1 ProductId=1 ProductName=Tomates  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/tomates.jpg  ProductAllergyInfo=None
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=2 "_Id=2" OwnerId=1 ProductId=2 ProductName=Pain  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/pain.jpg  ProductAllergyInfo=None 
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=3 "_Id=3" OwnerId=1 ProductId=3 ProductName=Aubergines  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/Aubergine.png  ProductAllergyInfo=None 
+az storage entity insert --connection-string $cosmosdbconnectionstring -t $tablename --if-exists replace -e PartitionKey=1 RowKey=4 "_Id=4" OwnerId=1 ProductId=4 ProductName=CocaCoco  ProductPictureUrl=https://picturesforcna.blob.core.windows.net/pictures/Coca.png  ProductAllergyInfo=None 
+
+
+
 ####################################################################################
 ################################ COMPTE DE STOCKAGE POUR IMAGES ################################
 write-host  Création du compte de stockage : $accountname
@@ -106,3 +113,7 @@ az webapp start -g $rgname -n $webappname
 #Cleaning temporary deployment artefact
 Remove-Item WebAppUI.zip
 Remove-Item CnaCatalogService.zip
+
+# Memento
+Write-Host "*** WebApps :"
+az webapp list -g $rgname -o table

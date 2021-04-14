@@ -115,10 +115,12 @@ namespace CnAppForAzureDev.Repositories
             return newItem;
         }
      
-        public Task<CatalogItem> GetAsync(string id)
+        public async Task<CatalogItem> GetAsync(string id)
         {
+            await ListAsync(); // HACK : forcing refresh to avoid local caching for demos purpose !!!
             var q = _catalogItems.Where(item => item.Id == id).Select(i => i).FirstOrDefault();
-            return Task.FromResult(q);
+            //return Task.FromResult(q);
+            return q;
         }
 
        

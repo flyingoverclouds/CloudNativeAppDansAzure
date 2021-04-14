@@ -20,6 +20,7 @@
 mono_crash.*
 
 # Build results
+*- Web Deploy/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

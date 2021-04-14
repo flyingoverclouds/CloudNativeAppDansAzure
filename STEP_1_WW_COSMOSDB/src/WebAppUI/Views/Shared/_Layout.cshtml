@@ -57,7 +57,7 @@
                 
         <footer class="border-top footer text-muted">
             <div class="container">
-                &copy; 2020 - CNA - (Step1) <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>        
+                &copy; 2020 - CNA - (Step1) <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a> &nbsp; web site running in '@System.Environment.GetEnvironmentVariable("REGION_NAME")'
                 @*<div class="row">*@                   
                     @*<div class="col-md-6 text-right">*@
                         @await Html.PartialAsync("_SelectLanguagePartial")
