@@ -95,7 +95,7 @@ write-host  Création du service plan : $planname
 az appservice plan create -g $rgname -n $planname -l $location
 
 az webapp create -g $rgname -p $planname -n $webappname 
-az webapp config appsettings set -g $rgname -n $webappname --settings  CatalogItemsServiceUrl=$catalogserviceurl  MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
+az webapp config appsettings set -g $rgname -n $webappname --settings  CatalogItemsServiceUrl=$catalogserviceurl  MaxItemsOnHomePage=12 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
 az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
