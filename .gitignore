@@ -21,6 +21,8 @@ mono_crash.*
 
 # Build results
 *- Web Deploy/
+*- Zip Deploy/
+*- Zip Deploy.json
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
