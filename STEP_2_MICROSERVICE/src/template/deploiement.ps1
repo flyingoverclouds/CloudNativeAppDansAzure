@@ -5,7 +5,7 @@ $sub=az account show --query "id" -o tsv
 
 $suffixe=Read-host "Entrez le suffixe à utiliser" 
 
-$rgname="cna-"+ $suffixe +"-rg"
+$rgname="CNA-"+ $suffixe +"-rg"
 $accountname="cna"+$suffixe+"storage"
 $planname="cnaplan"+$suffixe
 $webappname="cnawebui"+$suffixe

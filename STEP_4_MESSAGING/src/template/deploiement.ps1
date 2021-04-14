@@ -186,15 +186,21 @@ az functionapp config appsettings set -n $functionname -g $rgname --settings App
 
 ################################ DEPLOIEMENT DES APPS ##################################
 #déploiement des applications
+Write-host "Deploiement de CnaCatalogService.zip ..."
 az webapp deployment source config-zip -g $rgname -n $catalogservicename --src .\CnaCatalogService.zip
+Write-host "Restarting webapp ..."
 az webapp stop -g $rgname -n $catalogservicename
 az webapp start -g $rgname -n $catalogservicename
 
+Write-host "Deploiement de WebAppUi.zip ..."
 az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
+Write-host "Restarting webapp ..."
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
 
+Write-host "Deploiement de CnaFuncOnCatalog.zip ..."
 az functionapp deployment source config-zip -g $rgname -n $functionname --src .\CnaFuncOnCatalog.zip
+Write-host "Restarting webapp ..."
 az functionapp stop -g $rgname -n $functionname 
 az functionapp start -g $rgname -n $functionname 
 ##################################################################################
