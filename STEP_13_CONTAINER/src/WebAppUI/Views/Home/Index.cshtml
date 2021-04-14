@@ -1,0 +1,76 @@
+﻿@using CnAppForAzureDev.Managers
+@model CnAppForAzureDev.ViewModels.CatalogItemIndexViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Home";
+    var industry = (IIndustry)ViewData["Industry"];
+}
+
+<style>
+    .home #intro { background-image: url(@industry.BackgroundImage); }
+    .text-styling { @industry.LandingPageTextStyling }
+</style>
+
+<main class="">
+    <div class="container home">
+        <section id="intro" class="card fadeIn wow" style="animation-name: fadeIn; visibility: visible;">
+            <div class="card-body my-5 px-5 py-5 text-styling">
+                <h1 class="mb-4">
+
+                    <strong>@Localizer[@industry.LandingPageMainText]</strong>
+                </h1>
+                <p>
+                    <strong>@Localizer[@industry.LandingPageSubText]</strong>
+                </p>
+                @*@if (!IdentityService.IsUserLoggedIn(User))
+        {*@
+                @* TODO: Uncomment when signin is ready *@
+                @*<a class="btn btn-wg-green btn-lg btn-rounded waves-effect waves-light" asp-controller="Account" asp-action="LogIn">@Localizer["Sign up"]</a>*@
+                @*}*@
+                <a class="btn btn-wg-green btn-lg btn-rounded waves-effect waves-light" asp-controller="Account" asp-action="LogIn">@Localizer["Sign up"]</a>
+            </div>
+        </section>
+        <section class="section pt-4">
+            <h4 class="font-weight-bold mt-4 title-1" style="letter-spacing: 2px;">
+                <strong>@Localizer[@industry.LandingPageProductDisplayTitle]</strong>
+            </h4>
+            <hr class="mb-5 wg-black" style="border-top: 3px solid rgba(0, 0, 0, .1);">
+            
+            <div class="fadeIn mb-4 row wow" style="animation-name: fadeIn; visibility: visible;">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="overlay view">
+                                <img alt="@item.ProductName" class="card-img-top" src="@item.ProductPictureUrl">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title mb-1">@item.ProductName</h5>
+                                <ul class="rating">
+                                    <li>
+                                        <i class="fa fa-star wg-black-text"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-star wg-black-text"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-star wg-black-text"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-star wg-black-text"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fa fa-star wg-black-text"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </section>
+    </div>
+</main>

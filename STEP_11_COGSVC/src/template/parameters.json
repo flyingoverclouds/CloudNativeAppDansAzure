@@ -1,0 +1,18 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_ncastep2webapp_name": {
+            "value": null
+        },
+        "serverfarms_ncastep2plan_name": {
+            "value": null
+        },
+        "sites_ncastep2catalogservice_name": {
+            "value": null
+        },
+        "storageAccounts_cnastep2storage_name": {
+            "value": null
+        }
+    }
+}

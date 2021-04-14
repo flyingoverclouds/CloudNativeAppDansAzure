@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>df2c67b9-5981-48af-b313-a1ecc4f5955a</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CnaCatalogService\**" />
+    <Compile Remove="Services\**" />
+    <Content Remove="CnaCatalogService\**" />
+    <Content Remove="Services\**" />
+    <EmbeddedResource Remove="CnaCatalogService\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="CnaCatalogService\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entities\ICatalogItem.cs" />
+    <Compile Remove="Entities\IEntityBase.cs" />
+    <Compile Remove="Repositories\IRepository.cs" />
+    <Compile Remove="Repositories\Specifications\ISpecification.cs" />
+    <Compile Remove="Repositories\TrolleyItemRepository.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\font\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Repositories.Services.Interfaces\Repositories.Services.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties wwwroot_4lib_4bootstrap_4dist_4js_4bootstrap_1bundle_1min_1js_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>

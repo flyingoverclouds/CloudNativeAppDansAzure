@@ -1,0 +1,89 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@using CnAppForAzureDev.Managers;
+@{
+    ViewData["Title"] = "Sign in";
+    var industry = (IIndustry)ViewData["Industry"];
+}
+
+<head>
+    <style type="text/css">
+        .card-body {
+            height: 250px;
+        }
+
+            .card-body .card-title {
+                height: 28px;
+            }
+
+            .card-body .card-text {
+                height: 63px;
+            }
+
+            .card-body button {
+                height: 40px;
+            }
+    </style>
+</head>
+
+<main class="">
+    <form asp-controller="Account" asp-action="LogInFor" method="post">
+        <div class="container">
+           
+            <section class="text-center pt-5">
+                <div class="fadeIn row wow" style="animation-name: fadeIn; visibility: visible;">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="overlay view">
+                                <img alt="" class="card-img-top" src="@industry.LoginPageIndividualCustomerImage">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">@Localizer[@industry.LoginPageIndividualCustomerTitle]</h4>
+                                <p class="card-text">@Localizer[@industry.LoginPageIndividualCustomerSubText]</p>
+                                
+                                <button name="command" class="btn btn-wg-green btn-md btn-rounded waves-effect waves-light" type="submit" value="customerSignIn">@Localizer["Sign in with your"] @Localizer[@industry.LoginPageIndividualCustomerAccountName]</button>
+                                <button name="command" class="btn btn-link btn-md" type="submit" value="customerSignUp">@Localizer["Sign up with your"] @Localizer[@industry.LoginPageIndividualCustomerAccountName]</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="overlay view">
+                                <img alt="" class="card-img-top" src="@industry.LoginPageBusinessCustomerImage">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">@Localizer[@industry.LoginPageBusinessCustomerTitle]</h4>
+                                <p class="card-text">@Localizer[@industry.LoginPageBusinessCustomerSubText]</p>
+                                <button name="command" class="btn btn-wg-green btn-md btn-rounded waves-effect waves-light" type="submit" value="businessSignIn">@Localizer["Sign in with your"] @Localizer[@industry.LoginPageBusinessCustomerAccountName]</button>
+                                <button name="command" class="btn btn-link btn-md" type="submit" value="businessSignUp">@Localizer["Sign up with your"] @Localizer[@industry.LoginPageBusinessCustomerAccountName]</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="overlay view">
+                                <img alt="" class="card-img-top" src="@industry.LoginPagePartnerImage">
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">@Localizer[@industry.LoginPagePartnerTitle]</h4>
+                                <p class="card-text">@Localizer[@industry.LoginPagePartnerSubText]</p>
+                                <button name="command" class="btn btn-wg-green btn-md btn-rounded waves-effect waves-light" type="submit" value="partnerSignIn">@Localizer["Sign in with your"] @Localizer[@industry.LoginPagePartnerAccountName]</button>
+                                <button name="command" class="btn btn-link btn-md" type="submit" value="partnerSignUp">@Localizer["Request your"] @Localizer[@industry.LoginPagePartnerAccountName]</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="text-center">
+                <div class="fadeIn row wow" style="animation-name: fadeIn; visibility: visible;">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        @*<button name="command" class="btn btn-link btn-md" type="submit" value="@Constants.AuthenticationSchemes.CustomerAuth:@Constants.Policies.SignUpOrSignInWithPersonalAccountUsingRewriteRules">Sign in with your personal account<br />using an A/B policy (preview)</button>*@
+                    </div>
+                </div>
+            </section>
+        </div>
+    </form>
+</main>

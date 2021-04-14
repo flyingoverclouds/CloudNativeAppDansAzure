@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+  cnacatalogservice:
+    image: ${DOCKER_REGISTRY-}cnacatalogservice
+    build:
+      context: .
+      dockerfile: CnaCatalogService/Dockerfile
+    environment:
+      AccountKey: "o/d4b+obgrLk0rPYQbm/Tl+83pkwPpb85IiSYgCR+sdPDx0xDUBDBI9Dk5PqOBhVCfZjXh4O7WDIH7btk10GnA=="
+      AccountName: "cnancstep2storage"
+      CatalogName: "catalog"
+      ContainerName: "images"
+      MaxItems: "12"
+
+  webappui:
+    image: ${DOCKER_REGISTRY-}webappui
+    build:
+      context: .
+      dockerfile: WebAppUI/Dockerfile
+    ports:
+      - 31080:31080
+    environment:
+      MOTD: "MOTD via DockerCompose"
+      CatalogItemsServiceUrl: "http://cnacatalogservice:32080/api/catalogItems"
+

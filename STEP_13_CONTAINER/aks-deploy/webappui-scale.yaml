@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: cnappforazuredev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cnappforazuredev
+  template:
+    metadata:
+      labels:
+        app: cnappforazuredev 
+    spec:
+      containers:
+      - name: cnappforazuredev
+        image: mcmgdevnccr.azurecr.io/webappui:latest 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 31080
+          name: http
+        env:
+        - name: MOTD
+          value: "Gentil MOT Avec AKS et ReplicaSET "
+        - name: CatalogItemsServiceUrl
+          value: "http://cnacatalogservice.demo-woodgrove.svc.cluster.local/api/catalogItems"
+        # resources:
+        #   requests: # minimum resources required
+        #     cpu: 250m
+        #     memory: 64Mi
+        #   limits: # maximum resources allocated
+        #     cpu: 500m
+        #     memory: 512Mi
