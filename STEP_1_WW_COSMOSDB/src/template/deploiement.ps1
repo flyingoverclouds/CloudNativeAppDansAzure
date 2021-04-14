@@ -1,8 +1,9 @@
 
-$sub="9a96981c-4056-48b7-9301-7c2757548bcf"
+#retrieve the default subscription ID. You can change it and force a specifi subscription ID.
+$sub=az account show --query "id"
 
-
-$suffixe=Read-host "Entrez le suffixe à utiliser" 
+#$suffixe=Read-host "Entrez le suffixe à utiliser" 
+$suffixe="step2nc"
 $rgname="cna"+ $suffixe +"-rg"
 $accountname="cna"+$suffixe+"storage"
 $planname="cnaplan"+$suffixe

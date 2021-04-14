@@ -1,9 +1,11 @@
 
-$sub="9a96981c-4056-48b7-9301-7c2757548bcf"
 
+#$sub="XXXXX"
+$sub=az account show --query "id" -o tsv
 
 $suffixe=Read-host "Entrez le suffixe à utiliser" 
-$rgname="cna"+ $suffixe +"-rg"
+
+$rgname="cna-"+ $suffixe +"-rg"
 $accountname="cna"+$suffixe+"storage"
 $planname="cnaplan"+$suffixe
 $webappname="cnawebui"+$suffixe
@@ -13,6 +15,19 @@ $containername="images"
 $location="francecentral"
 $cosmosdbname="cnacosmosdb"+$suffixe
 $catalogserviceurl="https://"+$catalogservicename+".azurewebsites.net/api/catalogitems"
+
+
+####################################################################################
+# Compilation des applications
+Remove-Item WebAppUi.zip  
+dotnet publish ..\WebAppUI\CnAppForAzureDev.csproj
+Compress-Archive -Path ..\WebAppUI\bin\Debug\netcoreapp3.1\publish\* -DestinationPath WebAppUi.zip  
+
+Remove-Item CnaCatalogService.zip  
+dotnet publish ..\CnaCatalogService\CnaCatalogService.csproj
+Compress-Archive -Path ..\CnaCatalogService\bin\Debug\netcoreapp3.1\publish\* -DestinationPath CnaCatalogService.zip  
+
+
 
 ####################################################################################
 
@@ -75,7 +90,9 @@ az appservice plan create -g $rgname -n $planname -l $location
 
 az webapp create -g $rgname -p $planname -n $webappname 
 az webapp config appsettings set -g $rgname -n $webappname --settings  CatalogItemsServiceUrl=$catalogserviceurl  MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
-az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
+
+#az webapp deployment source config-zip -g $rgname -n $webappname --src .\WebAppUI.zip
+
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
 
@@ -87,7 +104,8 @@ write-host  Création API $catalogservicename
 az webapp create -g $rgname -p $planname -n $catalogservicename 
 az webapp config appsettings set -g $rgname -n $catalogservicename --settings UseCosmosDb=false AccountKey=$accountkey AccountName=$accountname CosmosDbConnectionString=$cosmosdbconnectionstring CatalogName=$tablename ContainerName=$containername  MaxItems=25 MaxItemsOnHomePage=6 ApplicationInsightsAgent_EXTENSION_VERSION="~2" 
 
-az webapp deployment source config-zip -g $rgname -n $catalogservicename --src .\CnaCatalogService.zip
+#az webapp deployment source config-zip -g $rgname -n $catalogservicename --src .\CnaCatalogService.zip
+
 az webapp stop -g $rgname -n $webappname
 az webapp start -g $rgname -n $webappname
 
