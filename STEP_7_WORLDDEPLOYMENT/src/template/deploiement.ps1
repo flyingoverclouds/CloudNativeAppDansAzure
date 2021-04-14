@@ -89,7 +89,7 @@ write-host  Création du container : $containername
 
 ########################## SERVICE PLAN ET APP SERVICE [LOCATION PRINCIPALE] ###########################
 write-host  Création du service plan : $planname
-az appservice plan create -g $rgname -n $planname -l $location
+az appservice plan create -g $rgname -n $planname -l $location --sku S1
 write-host  Création de la webapp $webappname  
 az webapp create -g $rgname -p $planname -n $webappname 
 
@@ -101,7 +101,7 @@ az webapp config appsettings set -g $rgname -n $webappname --settings UseCosmosD
 
 ########################## SERVICE PLAN ET APP SERVICE [LOCATION 2] ###########################
 write-host  Création du service plan : $plannameLoc2
-az appservice plan create -g $rgname -n $plannameLoc2 -l $location2
+az appservice plan create -g $rgname -n $plannameLoc2 -l $location2 --sku S1
 write-host  Création de la webapp $webappnameLoc2
 az webapp create -g $rgname -p $plannameLoc2 -n $webappnameLoc2
 
@@ -113,7 +113,7 @@ az webapp config appsettings set -g $rgname -n $webappnameLoc2 --settings UseCos
 
 ########################## SERVICE PLAN ET APP SERVICE [LOCATION 3] ###########################
 write-host  Création du service plan : $plannameLoc3
-az appservice plan create -g $rgname -n $plannameLoc3 -l $location3
+az appservice plan create -g $rgname -n $plannameLoc3 -l $location3 --sku S1
 write-host  Création de la webapp $webappnameLoc3
 az webapp create -g $rgname -p $plannameLoc3 -n $webappnameLoc3
 
