@@ -208,3 +208,9 @@ az functionapp start -g $rgname -n $functionname
 Remove-Item .\CnaCatalogService.zip
 Remove-Item .\CnaFuncOnCatalog.zip
 Remove-Item .\WebAppUi.zip
+
+# Memento
+Write-Host "*** WebApps :"
+az webapp list -g $rgname -o table
+Write-Host "*** Functions :"
+az functionapp list -g $rgname -o table
