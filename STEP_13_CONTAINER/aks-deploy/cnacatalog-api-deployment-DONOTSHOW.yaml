@@ -20,7 +20,7 @@ spec:
           name: http
         env:
         - name: AccountName
-          value: "cnancstep2storage"
+          value: "cnas02ncstorage"
         - name: CatalogName
           value: "catalog"
         - name: ContainerName
@@ -49,4 +49,4 @@ spec:
         #     port: 3000
         #     path: /healthz
         - name: AccountKey
-          value:  "o/d4b+obgrLk0rPYQbm/Tl+83pkwPpb85IiSYgCR+sdPDx0xDUBDBI9Dk5PqOBhVCfZjXh4O7WDIH7btk10GnA=="
+          value:  "codz0v7RAb2KNnpvBMfsKVgl+wockK00SpDw50eCcbnAwYwT+/WdjSp2udeZHmMAba2bl2tQQC7ZxvV15am7gQ=="

@@ -7,8 +7,8 @@ services:
       context: .
       dockerfile: CnaCatalogService/Dockerfile
     environment:
-      AccountKey: "o/d4b+obgrLk0rPYQbm/Tl+83pkwPpb85IiSYgCR+sdPDx0xDUBDBI9Dk5PqOBhVCfZjXh4O7WDIH7btk10GnA=="
-      AccountName: "cnancstep2storage"
+      AccountKey: "codz0v7RAb2KNnpvBMfsKVgl+wockK00SpDw50eCcbnAwYwT+/WdjSp2udeZHmMAba2bl2tQQC7ZxvV15am7gQ=="
+      AccountName: "cnas02ncstorage"
       CatalogName: "catalog"
       ContainerName: "images"
       MaxItems: "12"
