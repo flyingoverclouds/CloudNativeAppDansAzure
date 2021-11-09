@@ -61,13 +61,14 @@ namespace CnaFuncOnCatalog
             return new Message(Encoding.UTF8.GetBytes(jsonBody));
 
         }
+
+
+
         [FunctionName("AddItem")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log, ExecutionContext context)
         {
-            
-            //TODO:DEMO SEND MESSAGE
             log.LogInformation("C# HTTP trigger function processed a request.");            
             if (_configuration ==null)
             {

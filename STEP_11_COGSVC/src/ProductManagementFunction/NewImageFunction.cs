@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.WebJobs;
@@ -64,12 +68,43 @@ namespace ProductManagementFunction
                     ProductAllergyInfo = "None",
                     ProductId = pid,
                     ProductName = imgAnalysis.Description.Captions.FirstOrDefault().Text,
-                    ProductPictureUrl = System.Environment.GetEnvironmentVariable("baseImageUrl") + name
+                    ProductPictureUrl = GetSasUrlForBlob(
+                        System.Environment.GetEnvironmentVariable("CnxProductStorage"),
+                        "productimages", // TODO : should be parameters
+                        System.Environment.GetEnvironmentVariable("baseImageUrl") , 
+                        name)
                 };
 
                 return p;
             }
 
+        }
+
+        static private string GetSasUrlForBlob(string storageCnxString, string containerName,string baseUrl , string blobname)
+        {
+            var conBuilder = new DbConnectionStringBuilder();
+            conBuilder.ConnectionString = storageCnxString;
+            var credential = new StorageSharedKeyCredential(conBuilder["AccountName"] as string, conBuilder["AccountKey"] as string);
+
+            var sas = new BlobSasBuilder
+            {
+                BlobName = blobname,
+                BlobContainerName = containerName,
+                StartsOn = DateTime.Now.AddDays(-1), // validity start yesterday (avoid protential timezone trouble :D )
+                ExpiresOn = DateTime.Now.AddYears(9) // 9year SAS lifetime
+            };
+            sas.SetPermissions(BlobAccountSasPermissions.Read);// SAS token only for READ blob
+
+
+            UriBuilder sasUri = new UriBuilder()
+            {
+                Scheme = "https",
+                Host = $"{conBuilder["AccountName"]}.blob.core.windows.net",
+                Path = $"{containerName}/{blobname}",
+                Query = sas.ToSasQueryParameters(credential).ToString()
+            };
+
+            return sasUri.Uri.ToString();
         }
 
 
@@ -141,40 +176,5 @@ namespace ProductManagementFunction
 
 
         }
-        /*
-
-                public static void Run2(
-                        [BlobTrigger("new/{name}", Connection = "CnxStorageAccountDemo")] Stream myBlob,  // the blob that trigger the function executation
-                        string name,    // name of the blob (like found in container in the storage account
-                        [Queue("readyfortranslation", Connection = "CnxStorageAccountDemo")] out string messageToTranslate, // OUTput paremeters used bye function runtime to push a new message in the queue named 'readyfortranslation', using the same storage account connexion as the blobtrigger
-                        ILogger log // logger interface 
-                )
-                {
-                    log.LogInformation($"OCRing blob [{name}]   Size: {myBlob.Length} Bytes");
-
-                    var visionClient = new ComputerVisionClient(new ApiKeyServiceClientCredentials(System.Environment.GetEnvironmentVariable("csVisionKey")))
-                    {
-                        Endpoint = System.Environment.GetEnvironmentVariable("csVisionEndpoint") // AppSetting are automatically mapped on EnvironmentVariable
-                    };
-
-                    var imgOcr = visionClient.RecognizePrintedTextInStreamAsync(true, myBlob).GetAwaiter().GetResult();
-
-                    if (imgOcr != null)
-                    {
-                        string textToTranslate = GetTextFromOcrResult(imgOcr);
-                        messageToTranslate = $"{name}##{textToTranslate}";
-                        // HACK : the previous line use a simple formatting to send the blob name AND the ocr text to the next function.
-                        // In real life, we must save the original text+langguage in a DB, push only the name of the blob 
-                        // eg : we can use a CosmosDB database with json document linkied to each scanned document. this json doc will be enriching by each function (OCr, then translation, then feature extraction, ...)
-
-                        log.LogInformation("MESSAGE pushed to queue : " + messageToTranslate);
-                    }
-                    else
-                    {
-                        messageToTranslate = string.Empty;
-                        log.LogError($"ERROR WHILE OCRING BLOB {name}!");
-                    }
-                }
-        */
     }
 }

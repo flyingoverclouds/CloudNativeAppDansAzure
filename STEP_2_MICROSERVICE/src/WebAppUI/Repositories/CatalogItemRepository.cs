@@ -94,7 +94,7 @@ namespace CnAppForAzureDev.Repositories
        
         public async Task<List<CatalogItem>> ListAsync()
         {            
-            // HACK - deactivate UI data caching to test catalog update
+            // HACK - deactivate UI data caching to test catalog update (c'est pour voir ceux qui lisent le code ;) )
             //if (_catalogItems==null)
             {
                 string CatalogItemsServiceUrl = _configuration["CatalogItemsServiceUrl"];
