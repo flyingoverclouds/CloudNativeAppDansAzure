@@ -1,0 +1,3 @@
+# ignore deploiement process artifact. NC20201007
+
+*.zip

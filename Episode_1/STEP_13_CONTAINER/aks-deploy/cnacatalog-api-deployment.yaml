@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cnacatalogservice
+spec:
+  selector:
+    matchLabels:
+      app: cnacatalogservice
+  template:
+    metadata:
+      labels:
+        app: cnacatalogservice # the label for the pods and the deployments
+    spec:
+      containers:
+      - name: cnacatalogservice
+        image: mcmgdevnccr.azurecr.io/cnacatalogservice:v1 
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 32080
+          name: http
+        env:
+        - name: AccountKey
+          value:  "XXXXXXXXXXXX"
+        - name: AccountName
+          value: "ncastoragenc11"
+        - name: CatalogName
+          value: "catalog"
+        - name: ContainerName
+          value: "images"
+        - name: MaxItems
+          value: "18"
+        # - name: SQLDB_URI
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: sqlconnectionstring # the name of the Kubernetes secret containing the data
+        #       key: SQLDBCONNECTION  # the key inside the Kubernetes secret containing the data
+        #----------------------------------------------------------------------------------------------------------------------
+        # resources:
+        #   requests: # minimum resources required
+        #     cpu: 250m
+        #     memory: 64Mi
+        #   limits: # maximum resources allocated
+        #     cpu: 500m
+        #     memory: 256Mi
+        # readinessProbe: # is the container ready to receive traffic?
+        #   httpGet:
+        #     port: 3000
+        #     path: /healthz
+        # livenessProbe: # is the container healthy?
+        #   httpGet:
+        #     port: 3000
+        #     path: /healthz
