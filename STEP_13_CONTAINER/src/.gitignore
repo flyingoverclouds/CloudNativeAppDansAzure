@@ -1,3 +1,0 @@
-# ignore deploiement process artifact. NC20201007
-appsettings.Development.json
-*.zip
